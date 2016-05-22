@@ -1,36 +1,46 @@
 <html lang='ja'>
 <meta charset='UTF-8'>
 
-<title>
-ソウルプラン・チャートの計算
-</title>
-
 <head>
-
 </head>
 
+<title>
+  ソウルプラン・チャートの計算
+</title>
+
+
 <body>
+<center>
 
 <h1>
 ソウルプラン・チャートの計算
 </h1>
 
+
 <form name="js">
-名前(半角小文字)：<input type="text" name="txtb" value=""><br>
-<input type="button" value="計算" onclick="tbox1()"><br>
+<font size="+2">
+	お名前(半角小文字) <br>
+	<input type="text" name="txtb" value=""><br>
+</font>
+
+<input type="button" value="通常の計算"           onclick="calc_soul_plan(0)"><br>
+<input type="button" value="ショートネーム計算" onclick="calc_soul_plan(1)"><br>
+<br>
 <input type="button" value="消去" onclick="clr()"><br>
 </form>
+</center>
 
 <script>
 
 //////////////////////////////////////////////////////////////
-// テキストボックスの文字を取得して結果を表示
-function tbox1(){
+// テキストボックスの文字を取得
+// ソウルプラン・チャートを計算して結果を表示
+function calc_soul_plan(is_force_short_name){
 
   var orig_name = document.js.txtb.value;
 
   var case_name = orig_name.toUpperCase().replace(' ', '');
-  var is_short_name = (case_name.length < 10) ? 1 : 0;
+  var is_short_name = (is_force_short_name || (case_name.length < 10)) ? 1 : 0;
   var char_array = get_char_array(case_name);
   var value_array = get_value_array(char_array);
 
@@ -53,7 +63,7 @@ function tbox1(){
 
   // アラートに出力
   alert(
-    "ようこそ"+orig_name+"さん！\n" + 
+    " "+orig_name+"さん！\n" + 
     "\n" +
     ""+str+" \n\n" +
     ""+str2+""
@@ -116,7 +126,7 @@ function  change_special_two_chars(char_ary, val_ary) {
       case "AH" : replace_value =  5;  break;
       case "CH" : replace_value =  8;  break;
       case "SH" : replace_value = 21;  break;
-      case "TA" : replace_value = 21;  break;
+      case "TA" : replace_value = 22;  break;
       case "TH" : replace_value = 22;  break;
       case "TZ" : replace_value = 18;  break;
       case "WH" : replace_value = 16;  break;
@@ -212,10 +222,10 @@ function get_print_string(is_short, hexa_1st, hexa_2nd, destiny_val) {
   var str = "";
 
   if (is_short) {
-    str += "現実世界における/スピリチュアルなチャレンジ : " +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
-    str += "現実世界における/スピリチュアルな才能       : " +  hexa_1st[1]    + " - " + hexa_2nd[1]    + "\n";
-    str += "現実世界における/スピリチュアルなゴール     : " +  hexa_1st[2]    + " - " + hexa_2nd[2]    + "\n";
-    str += "ソウル・デスティニー                        : " +  destiny_val[0] + " - " + destiny_val[1] + "\n";
+    str += "現実世界/スピリチュアルなチャレンジ : " +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
+    str += "現実世界/スピリチュアルな才能       : " +  hexa_1st[1]    + " - " + hexa_2nd[1]    + "\n";
+    str += "現実世界/スピリチュアルなゴール     : " +  hexa_1st[2]    + " - " + hexa_2nd[2]    + "\n";
+    str += "ソウル・デスティニー                : " +  destiny_val[0] + " - " + destiny_val[1] + "\n";
   }
   else {
     str += "現実世界におけるチャレンジ : " +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
