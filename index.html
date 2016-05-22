@@ -8,13 +8,7 @@
   ソウルプラン・チャート
 </title>
 
-<style type="text/css">
-
-input, select, textarea {
- font-size: 100%;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" href="soul_plan.css" media="all">
 
 <body>
 <center>
@@ -233,23 +227,27 @@ function calc_destiny_values(is_short, hexa_1st, hexa_2nd, destiny_val) {
 function get_print_string(is_business, is_short, hexa_1st, hexa_2nd, destiny_val) {
   var str = "";
 
-  if (is_short) {
-    str += "現実世界/スピリチュアルなチャレンジ : " +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
-    str += "現実世界/スピリチュアルな才能       : " +  hexa_1st[1]    + " - " + hexa_2nd[1]    + "\n";
-    str += "現実世界/スピリチュアルなゴール     : " +  hexa_1st[2]    + " - " + hexa_2nd[2]    + "\n";
-  }
-  else {
-    str += "現実世界におけるチャレンジ : " +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
-    str += "現実世界における才能       : " +  hexa_1st[2]    + " - " + hexa_2nd[2]    + "\n";
-    str += "現実世界におけるゴール     : " +  hexa_1st[4]    + " - " + hexa_2nd[4]    + "\n";
-    str += "スピリチュアルなチャレンジ : " +  hexa_1st[1]    + " - " + hexa_2nd[1]    + "\n";
-    str += "スピリチュアルな才能       : " +  hexa_1st[3]    + " - " + hexa_2nd[3]    + "\n";
-    str += "スピリチュアルなゴール     : " +  hexa_1st[5]    + " - " + hexa_2nd[5]    + "\n";
+  if (is_business) {
+    str += "チャレンジ:" +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
+    str += "才能      :" +  hexa_1st[1]    + " - " + hexa_2nd[1]    + "\n";
+    str += "ゴール    :" +  hexa_1st[2]    + " - " + hexa_2nd[2]    + "\n";
+    return str;
   }
 
-  if (!is_business) {
-    str += "\n";
-    str += "ソウル・デスティニー       : " +  destiny_val[0] + " - " + destiny_val[1] + "\n";
+  if (is_short) {
+    str += "現実/スピリチュアルチャレンジ:" +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
+    str += "現実/スピリチュアルな才能    :" +  hexa_1st[1]    + " - " + hexa_2nd[1]    + "\n";
+    str += "現実/スピリチュアルなゴール  :" +  hexa_1st[2]    + " - " + hexa_2nd[2]    + "\n";
+    str += "ソウル・デスティニー         :" +  destiny_val[0] + " - " + destiny_val[1] + "\n";
+  }
+  else {
+    str += "現実におけるチャレンジ  :" +  hexa_1st[0]    + " - " + hexa_2nd[0]    + "\n";
+    str += "現実における才能        :" +  hexa_1st[2]    + " - " + hexa_2nd[2]    + "\n";
+    str += "現実におけるゴール      :" +  hexa_1st[4]    + " - " + hexa_2nd[4]    + "\n";
+    str += "スピリチュアルチャレンジ:" +  hexa_1st[1]    + " - " + hexa_2nd[1]    + "\n";
+    str += "スピリチュアルな才能    :" +  hexa_1st[3]    + " - " + hexa_2nd[3]    + "\n";
+    str += "スピリチュアルなゴール  :" +  hexa_1st[5]    + " - " + hexa_2nd[5]    + "\n";
+    str += "ソウル・デスティニー    :" +  destiny_val[0] + " - " + destiny_val[1] + "\n";
   }
 
   return str;
