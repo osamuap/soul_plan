@@ -18,10 +18,10 @@
 </h1>
 
 
-<form name="js">
+<form name="js" action="index.html">
 <font size="+3">
 	お名前(半角) <br>
-	<input type="text" style="width:500px;height:50px;" name="txtb" value=""><br>
+	<input type="text" style="width:500px;height:50px;" name="txtb" onKeyPress="return submitStop(event);"><br>
 </font>
 <br>
 
@@ -37,6 +37,15 @@
 </center>
 
 <script>
+//////////////////////////////////////////////////////////////
+// Inbox のリターンキーイベントを無効化
+//   http://www.programming-magic.com/20080119212425/
+function submitStop(e){
+  if (!e) var e = window.event;
+
+  if(e.keyCode == 13)
+    return false;
+}
 
 //////////////////////////////////////////////////////////////
 // テキストボックスの文字を取得
