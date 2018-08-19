@@ -14,7 +14,7 @@
 <center>
 
 <h1>
-ソウルプラン・チャート
+ソウルプラン・チャート (2018/08)
 </h1>
 
 
@@ -54,20 +54,28 @@ function calc_soul_plan(is_business){
 
   var orig_name = document.js.txtb.value;
 
-  var case_name = orig_name.toUpperCase().replace(/\s+/g, "");
-  var is_short_name = (is_business || (case_name.length < 10)) ? 1 : 0;
-  var char_array = get_char_array(case_name);
+  var case_name = orig_name.toUpperCase().replace(/\s+/g, ""); // Original name の 大文字
+  var char_array = get_char_array(case_name);                  // S 計算用結合文字への変換後文字列
   var value_array = get_value_array(char_array);
 
   change_special_two_chars(char_array, value_array);
 
+  // ショートネーム判定 - 2018/08 Fix. S計算文字数で Short name を判定
+  var is_short_name = (is_business || (char_array.length < 10)) ? 1 : 0;
+
   // Calc hexa values
   var hexa_1st_val_array = new Array(6);
   var hexa_2nd_val_array = new Array(6);
-  calc_hexa_values(is_short_name, value_array, hexa_1st_val_array, hexa_2nd_val_array);
-
   var destiny_values = new Array(2);
-  calc_destiny_values(is_short_name, hexa_1st_val_array, hexa_2nd_val_array, destiny_values);
+
+  if (is_short_name) { // ショートネーム用ディスティニー
+    calc_hexa_values(is_short_name, value_array, hexa_1st_val_array, hexa_2nd_val_array);
+    calc_short_destiny_values(value_array, destiny_values);
+  }
+  else {  // ロングネーム用ディスティニー
+    calc_hexa_values(is_short_name, value_array, hexa_1st_val_array, hexa_2nd_val_array);
+    calc_long_destiny_values(hexa_1st_val_array, hexa_2nd_val_array, destiny_values);
+  }
 
   var str = "";
   for (var i = 0; i < char_array.length; i++) {
@@ -159,7 +167,37 @@ function  change_special_two_chars(char_ary, val_ary) {
   }
 }
 
-// 
+// 合計の値を22以下に正規化する
+function norm_hexa_values_to_under22(value_in) {
+  var a_value = value_in;
+
+  while (a_value >= 23) {
+    var str = String(a_value);
+    a_value = 0;
+    for (var j = 0; j < str.length; j++) {
+      a_value += Number(str.charAt(j));
+    }
+  }
+
+  return a_value;
+}
+
+// 合計の値を9以下に正規化する
+function norm_hexa_values_to_under10(value_in) {
+  var a_value = value_in;
+
+  while (a_value >= 10) {
+    var str = String(a_value);
+    a_value = 0;
+    for (var j = 0; j < str.length; j++) {
+      a_value += Number(str.charAt(j));
+    }
+  }
+
+  return a_value;
+}
+
+// ヘキサグラムの値を計算
 function calc_hexa_values(is_short, val_ary, hexa_1st, hexa_2nd) {
   var hexa_values = [0, 0, 0, 0, 0, 0];
   var max_index = is_short ? 3 : 6;
@@ -169,68 +207,43 @@ function calc_hexa_values(is_short, val_ary, hexa_1st, hexa_2nd) {
   }
 
   for (var i = 0; i < max_index; i++) {
-    var a_value = hexa_values[i];
-    while (a_value >= 23) {
-      var str = String(a_value);
-      a_value = 0;
-      for (var j = 0; j < str.length; j++) {
-        a_value += Number(str.charAt(j));
-      }
-    }
-    hexa_values[i] = a_value;
+    hexa_values[i] = norm_hexa_values_to_under22(hexa_values[i]);
   }
 
   for (var i = 0; i < max_index; i++) {
-    var a_value = hexa_values[i];
-    if (a_value < 10) {
-      hexa_1st[i] = a_value;
-      hexa_2nd[i] = a_value;
-    }
-    else {
-      var val_2nd = a_value;
-      while (val_2nd >= 10) {
-        var str = String(val_2nd);
-        val_2nd = 0;
-        for (var j = 0; j < str.length; j++) {
-          val_2nd += Number(str.charAt(j));
-        }
-      }
-      hexa_1st[i] = a_value;
-      hexa_2nd[i] = val_2nd;
-    }
+    hexa_1st[i] = hexa_values[i];
+    hexa_2nd[i] = norm_hexa_values_to_under10(hexa_values[i]);
   }
   return;
 }
 
-// Calc destiny values
-function calc_destiny_values(is_short, hexa_1st, hexa_2nd, destiny_val) {
-  var max_index = is_short ? 3 : 6;
+// Calc long destiny values
+function calc_long_destiny_values(hexa_1st, hexa_2nd, destiny_val) {
   var sum1 = 0;
   var sum2 = 0;
 
-  for (var i = 0; i < max_index; i++) {
+  for (var i = 0; i < 6; i++) {
     sum1 += hexa_1st[i];
     sum2 += hexa_2nd[i];
   }
 
-  while (sum1 >= 23) {
-    var str = String(sum1);
-    sum1 = 0;
-    for (var j = 0; j < str.length; j++) {
-      sum1 += Number(str.charAt(j));
-    }
-  }
-  
-  while (sum2 >= 10) {
-    var str = String(sum2);
-    sum2 = 0;
-    for (var j = 0; j < str.length; j++) {
-      sum2 += Number(str.charAt(j));
-    }
+  destiny_val[0] = norm_hexa_values_to_under22(sum1);
+  destiny_val[1] = norm_hexa_values_to_under10(sum2);
+}
+
+// Calc short name destiny values
+function calc_short_destiny_values(val_ary, destiny_val) {
+  var total_values   = 0;
+  var s_total_values = 0;
+
+  for (var i = 0; i < val_ary.length; i++) {
+    total_values = total_values + val_ary[i];
   }
 
-  destiny_val[0] = sum1;
-  destiny_val[1] = sum2;
+  s_total_values = norm_hexa_values_to_under22(total_values);
+
+  destiny_val[0] = s_total_values;
+  destiny_val[1] = norm_hexa_values_to_under10(s_total_values);
 }
 
 function get_print_string(is_business, is_short, hexa_1st, hexa_2nd, destiny_val) {
